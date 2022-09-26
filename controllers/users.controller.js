@@ -22,7 +22,35 @@ controller.getRandomUser = (req, res, next) => {
 }
 
 
+controller.getAllUser = (req, res, next) => {
+    const { limit } = req.query
+    const users = loadUser();
+    console.log(users)
+    if (Array.isArray(users) && users.length > 0) {
+        if (limit) {
+            const limitedUser = users.slice(0, limit);
+            res.status(200).json({
+                success: true,
+                message: 'Limited User',
+                limitedUser
+            })
+        } else {
+            res.status(200).json({
+                success: true,
+                message: 'All User',
+                users
+            })
+
+        }
+    } else {
+        res.status(500).json({
+            success: false,
+            message: 'No user found',
+        })
+    }
+
+}
+
 
 //export controller 
-
 module.exports = controller;

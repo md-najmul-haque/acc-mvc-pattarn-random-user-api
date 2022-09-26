@@ -69,7 +69,16 @@ controller.postUser = (req, res, next) => {
         const userAddress = typeof address === 'string' && address.trim().length > 0 ? address : false
         const userPhotoURL = typeof photoURL === 'string' && address.trim().length > 0 ? photoURL : false
 
+        if (userGender && userName && userContact && userAddress && userPhotoURL) {
 
+
+
+        } else {
+            return res.status(400).json({
+                success: false,
+                message: "User is not created. Missing required fields",
+            })
+        }
 
     } else {
         return res.status(400).json({

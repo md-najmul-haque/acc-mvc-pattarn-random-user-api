@@ -1,5 +1,6 @@
 const { loadUser } = require("../model/userModel");
 const usersRoutes = require("../routes/userRoutes/users.routes");
+const fs = require("fs");
 
 //controller 
 const controller = {};
@@ -54,6 +55,9 @@ controller.getAllUser = (req, res, next) => {
 
 //save a user
 controller.postUser = (req, res, next) => {
+
+    const users = loadUser();
+
     if (typeof req.body === 'object' && Array.isArray(req.body) === false) {
         const { gender, name, contact, address, photoURL } = req.body
 
@@ -71,17 +75,47 @@ controller.postUser = (req, res, next) => {
 
         if (userGender && userName && userContact && userAddress && userPhotoURL) {
 
+            let user = {
+                _id: generateID(5),
+                name: userName,
+                gender:
+                    userGender.charAt(0).toUpperCase() +
+                    userGender.slice(1).toLocaleLowerCase(),
+                contact: userContact,
+                address: userAddress,
+                photoURL: userPhotoURL,
+            }
+
+            users.push(user)
+            let usersObject = JSON.stringify(users);
+
+            fs.writeFile("data.json", usersObject, (err) => {
+                // Error checking
+                if (!err) {
+                    res.status(201).json({
+                        success: true,
+                        message: "user created successfully",
+                        usersObject
+                    })
+                } else {
+                    res.status(500).json({
+                        success: false,
+                        message: "Internal server error. User not created",
+                        err,
+                    });
+                }
+            });
 
 
         } else {
-            return res.status(400).json({
+            res.status(400).json({
                 success: false,
                 message: "User is not created. Missing required fields",
             })
         }
 
     } else {
-        return res.status(400).json({
+        res.status(400).json({
             success: false,
             message: 'invalid body request'
         })

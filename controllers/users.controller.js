@@ -4,6 +4,7 @@ const usersRoutes = require("../routes/userRoutes/users.routes");
 //controller 
 const controller = {};
 
+//get random user
 controller.getRandomUser = (req, res, next) => {
     const users = loadUser();
     if (Array.isArray(users) && users.length > 0) {
@@ -21,7 +22,7 @@ controller.getRandomUser = (req, res, next) => {
     }
 }
 
-
+//get all user
 controller.getAllUser = (req, res, next) => {
     const { limit } = req.query
     const users = loadUser();
@@ -50,6 +51,20 @@ controller.getAllUser = (req, res, next) => {
     }
 
 }
+
+//save a user
+controller.postUser = (req, res, next) => {
+    if (typeof req.body === 'object' && Array.isArray(req.body) === false) {
+        const { gender, name, contact, address, photoURL } = req.body
+    } else {
+        return res.status(400).json({
+            success: false,
+            message: 'invalid body request'
+        })
+    }
+}
+
+
 
 
 //export controller 

@@ -1,5 +1,5 @@
 const express = require('express');
-const { getRandomUser, getAllUser } = require('../../controllers/users.controller');
+const { getRandomUser, getAllUser, postUser } = require('../../controllers/users.controller');
 
 //module scaffolding
 const usersRoutes = express.Router();
@@ -7,6 +7,7 @@ const usersRoutes = express.Router();
 // routes 
 usersRoutes.route('/user/random').get(getRandomUser)
 usersRoutes.route('/user/all').get(getAllUser)
+usersRoutes.route('user/save').post(postUser)
 
 // export route
 module.exports = usersRoutes;

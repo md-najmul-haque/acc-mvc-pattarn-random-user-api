@@ -56,6 +56,21 @@ controller.getAllUser = (req, res, next) => {
 controller.postUser = (req, res, next) => {
     if (typeof req.body === 'object' && Array.isArray(req.body) === false) {
         const { gender, name, contact, address, photoURL } = req.body
+
+        const userGender =
+            typeof gender === 'string' &&
+                gender.trim().length > 0 &&
+                (gender.toLocaleLowerCase() === 'male' ||
+                    gender.toLocaleLowerCase() === 'female' ||
+                    gender.toLocaleLowerCase('others')) ? gender : false
+
+        const userName = typeof name === 'string' && name.trim().length > 0 ? name : false
+        const userContact = typeof contact === 'number' && contact.trim().length === 11 ? contact : false
+        const userAddress = typeof address === 'string' && address.trim().length > 0 ? address : false
+        const userPhotoURL = typeof photoURL === 'string' && address.trim().length > 0 ? photoURL : false
+
+
+
     } else {
         return res.status(400).json({
             success: false,

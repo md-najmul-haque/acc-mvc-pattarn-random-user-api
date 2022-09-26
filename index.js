@@ -2,6 +2,7 @@
 const express = require('express');
 const cors = require('cors')
 const dbConnet = require('./utils/dbconnection');
+const usersRoutes = require('./routes/userRoutes/users.routes');
 
 //app config
 const app = express();
@@ -14,6 +15,9 @@ app.use(express.json())
 
 //database connection
 dbConnet()
+
+//user API route
+app.use('./api/v1', usersRoutes)
 
 //base url
 app.get('/', (req, res) => {

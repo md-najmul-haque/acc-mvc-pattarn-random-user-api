@@ -17,7 +17,7 @@ app.use(express.json())
 dbConnet()
 
 //user API route
-app.use('./api/v1', usersRoutes)
+app.use('/api/v1', usersRoutes)
 
 //base url
 app.get('/', (req, res) => {

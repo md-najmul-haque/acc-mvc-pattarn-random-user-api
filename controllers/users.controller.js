@@ -56,8 +56,6 @@ controller.getAllUser = (req, res, next) => {
 //save a user
 controller.postUser = (req, res, next) => {
 
-    const users = loadUser();
-
     if (typeof req.body === 'object' && Array.isArray(req.body) === false) {
         const { gender, name, contact, address, photoURL } = req.body
 
@@ -86,6 +84,7 @@ controller.postUser = (req, res, next) => {
                 photoURL: userPhotoURL,
             }
 
+            const users = loadUser();
             users.push(newUser)
             let newUsers = JSON.stringify(users);
 
@@ -209,21 +208,63 @@ controller.updateUser = (req, res, next) => {
     }
 }
 
+controller.bulkUpdate = (req, res, next) => {
+    if (
+        Array.isArray(req.body) &&
+        req.body.length > 0 &&
+        req.body.every(
+            (user) =>
+                (user && typeof user === "object" && user["_id"] && user["name"]) ||
+                user["gender"] ||
+                user["address"] ||
+                user["contact"] ||
+                user["photoURL"]
+        )
+    ) {
+        data.read("users", "users", (err, users) => {
+            if (!err && Array.isArray(users) && users.length > 0) {
+                data.bulkUpdate("users", "users", req.body, (err) => {
+                    if (!err) {
+                        res.status(200).json({
+                            success: true,
+                            message: "Users updated successfully",
+                        });
+                    } else {
+                        res.status(500).json({
+                            success: false,
+                            message: "Internal server error. Users not updated",
+                            err,
+                        });
+                    }
+                });
+            } else {
+                res.status(500).json({
+                    success: false,
+                    message: "Internal server error. No users found",
+                });
+            }
+        });
+    } else {
+        res.status(400).json({
+            success: false,
+            message: "Invalid request body",
+        });
+    }
+};
+
 controller.deleteUser = (req, res, next) => {
     const users = loadUser()
-
-    const { _id } = req.body;
-    const userID = typeof _id === "string" ? _id : false;
+    const id = req.params.id
+    const userID = typeof id === "string" ? id : false;
 
     if (userID) {
         if (Array.isArray(users) && users.length > 0) {
             const user = users.find((user) => user._id === userID);
             if (user) {
-                let users = JSON.parse(fs.readFileSync("user.json"));
-                const id = req.params.id
-                const result = users.filter(tool => tool._id != id)
-                var restUser = JSON.stringify(result);
-                fs.writeFile("data.json", restUser, (err) => {
+                // let users = JSON.parse(fs.readFileSync("user.json"));               
+                const result = users.filter(user => user._id != id)
+                let restUser = JSON.stringify(result);
+                fs.writeFile("user.json", restUser, (err) => {
                     if (!err) {
                         res.status(200).json({
                             success: true,
@@ -260,7 +301,6 @@ controller.deleteUser = (req, res, next) => {
     }
 
 };
-
 
 //export controller 
 module.exports = controller;

@@ -154,6 +154,7 @@ controller.updateUser = (req, res, next) => {
 
     if (Array.isArray(users) && users.length > 0) {
         const user = users.find((user) => user._id === _id);
+        const restUsers = users.find(user => user._id !== _id)
         if (user) {
             if (
                 userID &&
@@ -168,26 +169,26 @@ controller.updateUser = (req, res, next) => {
                     photoURL: userPhotoURL ? userPhotoURL : user.photoURL,
                 };
 
-                const { id } = req.params;
-                const newData = usersObject.find(user => user._id == id);
-                newData._id = id;
-                newData.name = req.body.name;
-                res.send(newData)
+                restUsers.push(updatedUser);
 
-                data.update("users", "users", updatedUser, (err) => {
+                const updatedUsersJson = JSON.stringify(restUsers)
+
+                fs.writeFile("user.json", updatedUsersJson, (err) => {
                     if (!err) {
-                        res.status(200).json({
+                        res.status(201).json({
                             success: true,
-                            message: "User updated successfully",
-                            updatedUser,
-                        });
+                            message: "user updated successfully",
+                            updatedUsersJson
+                        })
                     } else {
                         res.status(500).json({
                             success: false,
-                            message: "Internal server error. User not updated",
+                            message: "Internal server error. User not is updated",
+                            err,
                         });
                     }
                 });
+
             } else {
                 res.status(400).json({
                     success: false,

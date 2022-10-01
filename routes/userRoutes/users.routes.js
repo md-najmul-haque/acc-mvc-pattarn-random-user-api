@@ -8,7 +8,7 @@ const usersRoutes = express.Router();
 usersRoutes.route('/user/random').get(getRandomUser)
 usersRoutes.route('/user/all').get(getAllUser)
 usersRoutes.route('/user/save').post(postUser)
-usersRoutes.route('/user/update').patch(updateUser)
+usersRoutes.route('/user/update/:id').patch(updateUser)
 usersRoutes.route('/user/delete/:id').delete(deleteUser)
 
 // export route

@@ -1,7 +1,7 @@
 ## This is mainly assignment task for Node-Mongo Advanced Course.
 
 ### Live Server Link:
-[https://random-user-api-9e7j.onrender.com/](https://random-user-api-9e7j.onrender.com/).
+[https://random-user-api-9e7j.onrender.com](https://random-user-api-9e7j.onrender.com)
 
 ### You are required to use the following endpoints to perform the operation:
 
